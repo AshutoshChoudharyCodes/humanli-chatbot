@@ -1,0 +1,27 @@
+import requests
+from bs4 import BeautifulSoup
+
+def extract_text(url):
+    try:
+        response = requests.get(url, timeout=10)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        for tag in soup(["header", "footer", "nav", "aside", "script", "style"]):
+            tag.decompose()
+
+        text = soup.get_text(separator=" ")
+        cleaned_text = " ".join(text.split())
+        return cleaned_text
+
+    except Exception:
+        return None
+
+
+
+
+
+
+if __name__ == "__main__":
+    url = "https://en.wikipedia.org/wiki/Python_(programming_language)"
+    text = extract_text(url)
+    print(text[:500])
